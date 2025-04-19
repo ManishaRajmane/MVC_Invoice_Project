@@ -1,0 +1,66 @@
+﻿@model MVC_Invoice_Project.Models.tbl_customers
+@using MVC_Invoice_Project.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Invoice/_MyLayout.cshtml";
+}
+
+<h2>DashBoard</h2>
+<hr />
+<label><b>Total Customers : <span>@ViewBag.customer</span></b> </label>
+<br />
+<label><b>Total Products : <span>@ViewBag.product</span></b> </label>
+<br />
+<label><b>Total Invoices : <span>@ViewBag.invoices</span></b> </label>
+<br />
+<hr />
+@{
+    List<tbl_customers> lst = (List<tbl_customers>)ViewData["Customers"];
+}
+<h2>Customer Details</h2>
+<table class="table table-bordered w-75">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Mobile Number</th>
+            <th>City</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in lst)
+        {
+            <tr>
+                <td>@row.Customer_Name</td>
+                <td>@row.Mobile_Number</td>
+                <td>@row.City</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<hr />
+@{
+    List<tbl_Products> list = (List<tbl_Products>)ViewData["Products"];
+}
+<h2>Prodcuts Details</h2>
+<table class="table table-bordered w-75">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Product Rate</th>
+            <th>Product GST</th>
+            <th>Stock Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in list)
+        {
+            <tr>
+                <td>@row.Product_Name</td>
+                <td>@row.Rate</td>
+                <td>@row.GST</td>
+                <td>@row.Stock_Quantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

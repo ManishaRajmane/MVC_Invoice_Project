@@ -1,0 +1,50 @@
+﻿@model IEnumerable<MVC_Invoice_Project.Models.InvoiceModel>
+@{
+    ViewBag.Title = "AllInvoices";
+    Layout = "~/Views/Shared/Invoice/_MyLayout.cshtml";
+}
+<script src="~/Scripts/jquery-3.7.0.min.js"></script>
+<h2>All Invoices</h2>
+<hr />
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>Invoice Id</td>
+            <td>Invoice Date</td>
+            <td>Customer Name</td>
+            <td>Toatal Amount</td>
+            <td>Paid Amount</td>
+            <td>Remaining Amount</td>
+            <td>Status</td>
+            <td colspan="2">Actions</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model)
+        {
+            var invoice = row.remaining_amount;
+
+            <tr>
+                <td>@row.invoice_id</td>
+                <td>@row.invoice_date</td>
+                <td>@row.customer_name</td>
+                <td>@row.total_amount</td>
+                <td>@row.paid_amount</td>
+                <td>@row.remaining_amount</td>
+                <td>@row.status</td>
+                <td>
+                    @if(invoice!=0)
+                    { 
+                    <a href="/Invoice/PayNow/@row.invoice_id" id="txtpaynow">Pay Now</a>
+                    }
+                </td>
+                <td>
+                    <a href="/Invoice/ViewInvoice/@row.invoice_id">VIew Invoice</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

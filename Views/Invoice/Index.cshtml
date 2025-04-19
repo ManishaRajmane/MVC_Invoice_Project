@@ -1,0 +1,214 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Invoice/_MyLayout.cshtml";
+}
+
+<script>
+    var product = [];
+    var pname = "";
+    var final = 0;
+
+    $(document).ready(function () {
+        $("#Product_Id").change(function ()
+        { 
+            FecthProduct();
+        })
+
+        $("#txtpurquantity").keyup(function ()
+        {
+            Calculate();
+        })
+    })
+
+    function FecthProduct()
+    {
+        var pid = $("#Product_Id").val();
+
+        $.ajax({
+            url: '/Invoice/GetProductById/' + pid, 
+            method: 'get',
+            contentType: 'application/json',
+            success: function (resp)
+            {
+                pname = resp.Product_Name;
+                $("#txtrate").val(resp.Rate);
+                $("#txtgst").val(resp.GST);
+                $("#txtquantity").val(resp.Stock_Quantity);
+            }
+        })
+    }
+
+    function Calculate()
+    {
+        var rte = Number($("#txtrate").val());
+        var gst = Number($("#txtgst").val());
+        var purquantity = Number($("#txtpurquantity").val());
+        var psq = Number($("#txtquantity").val());
+
+        var total = (rte + (rte * gst) / 100) * purquantity;
+
+        $("#txttotal").val(total);
+
+        if (purquantity > psq)
+        {
+            alert("Please Check Stock Quantity..............!");
+            $("#txtpurquantity").val("");
+            $("#txttotal").val("");
+        }
+    }
+
+    function AddProducts()
+    {
+        var prid = $("#Product_Id").val();
+        var prate = $("#txtrate").val();
+        var pgst = $("#txtgst").val();
+        var psq = $("#txtquantity").val();
+        var purquan = $("#txtpurquantity").val();
+        var ptotal = $("#txttotal").val();
+        var cid = $("#Customer_id").val();
+        var invdate = $("#invid").val();
+
+
+        if (prid == "" || prate == "" || pgst == "" || psq == "" || purquan == "" || ptotal == ""||cid==""||invdate=="")
+        {
+            alert("Please Fill the Details..............!");
+            return;
+        }
+
+        var pt =
+        {
+            "Product_Id": prid,
+            "Product_Name": pname,
+            "Rate": prate,
+            "GST": pgst,
+            "Quantity": purquan,
+            "Total": ptotal
+        };
+
+        product.push(pt);
+
+        DisplayTable();
+        ClearData();
+    }
+
+    function DisplayTable()
+    {
+        $("#tbldata").empty();
+        final = 0;
+        var a = 1;
+        $.each(product, function (i, d) {
+
+            final = final+ Number(d.Total)
+
+            $("#tbldata").append("<tr><td>" + a +
+                "</td><td>" + d.Product_Name +
+                "</td><td>" + d.Rate +
+                "</td><td>" + d.GST +
+                "</td><td>" + d.Quantity +
+                "</td><td>" + d.Total +
+                "</td></tr>"); 
+            a++;
+        })
+        $("#tbltotal").html(final);
+    }
+
+    function ClearData()
+    {
+        $("#Product_Id").val("");
+        $("#txtrate").val("");
+        $("#txtgst").val("");
+        $("#txtquantity").val("");
+        $("#txtpurquantity").val("");
+        $("#txttotal").val("");
+    }
+
+    function ClearTableData()
+    {
+        $("#tbldata").empty();
+        $("#tbltotal").text("");
+    }
+
+    function SubmitInvoice()
+    {
+        var st =
+        {
+            "Customer_Id": $("#Customer_id").val(),
+            "Invoice_Date": $("#invid").val(),
+            "Total_Amount": final,
+            "tbl_invoice_products":product
+        }
+
+        $.ajax({
+            url: '/Invoice/GenerateInvoice',
+            method: 'post',
+            data: JSON.stringify(st),
+            contentType: 'application/json',
+            success: function (resp)
+            {
+                alert(resp);
+            }
+        })
+        ClearTableData();    
+    }
+</script>
+<h2>Invoice</h2>
+<br />
+<table>
+    <tr>
+        <td>Customer Name :</td>
+        <td>
+            @Html.DropDownList("Customer_id", ViewBag.customer as SelectList, "Select Customer")
+        </td>
+        <td class="w-25"></td>
+        <td>Invoice Date :</td>
+
+        <td><input type="date" id="invid" /></td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <br />
+        </td>
+    </tr>
+    <tr>
+        <td>Product</td>
+        <td>Rate</td>
+        <td>GST</td>
+        <td>Stock Quantity</td>
+        <td>Purchase Quantity</td>
+        <td>Total</td>
+    </tr>
+    <tr>
+        <td>
+            @Html.DropDownList("Product_Id" ,ViewBag.Product as SelectList, "Select Customer")
+        </td>
+        <td ><input type="text" id="txtrate" disabled style="width:150px"/></td>
+        <td><input type="text" id="txtgst" disabled style="width:150px"/></td>
+        <td><input type="text" id="txtquantity" disabled style="width:150px"/></td>
+        <td><input type="text" id="txtpurquantity" style="width:150px"/></td>
+        <td><input type="text" id="txttotal" disabled style="width:150px"/></td>
+        <td><input type="button" value="+" onclick="AddProducts()"/></td>
+    </tr>
+</table>
+<hr />
+<table class="table table-bordered w-75">
+    <thead>
+        <tr>
+            <th>Sr.No.</th>
+            <th>Product Name</th>
+            <th>Rate</th>
+            <th>GST</th>
+            <th>Purchase Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody id="tbldata">
+    </tbody>
+    <tr>
+        <td colspan="5" style="text-align:right"><b>Total : </b></td>
+        <td><b id="tbltotal"></b></td>
+    </tr>
+</table>
+<input type="button" value="SUBMIT" id="btnsubmit" onclick="SubmitInvoice()" />

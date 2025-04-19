@@ -1,0 +1,81 @@
+﻿@model MVC_Invoice_Project.Models.tbl_invoice_details
+@using MVC_Invoice_Project.Models
+@{
+    ViewBag.Title = "ViewInvoice";
+    Layout = "~/Views/Shared/Invoice/_MyLayout.cshtml";
+}
+
+<h2>View Invoice</h2>
+<div>
+    <table class="table table-bordered w-75">
+        <thead>
+            <tr>
+                <th>Invoice Id</th>
+                <th>Customer Id</th>
+                <th>Customer Name</th>
+                <th>Invoice Date</th>
+                <th>Mobile Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr>
+                <td>@Model.Invoice_Id</td>
+                <td>@Model.Customer_Id</td>
+                <td>@Model.tbl_customers.Customer_Name</td>
+                <td>@Model.Invoice_Date</td>
+                <td>@Model.tbl_customers.Mobile_Number</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+    <h2>Product Details</h2>
+    <hr />
+    <table class="table table-bordered w-75">
+        <thead>
+            <tr>
+                <td>Sr.No.</td>
+                <td>Product Name</td>
+                <td>Quantity</td>
+                <td>Rate</td>
+            </tr>
+        </thead>
+        @{ 
+            var i = 1;
+        }
+        <tbody>
+            @foreach (var item in Model.tbl_invoice_products)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@item.tbl_Products.Product_Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.tbl_invoice_details.Total_Amount</td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+    <hr />
+    <h2>Payment Details</h2>
+    <table class="table table-bordered w-75">
+        <thead>
+            <tr>
+                <td>Payment Id</td>
+                <td>Pyament Date</td>
+                <td>Payment Mode</td>
+                <td>Total Amount</td>
+            </tr>
+        </thead>
+        @foreach(var item in Model.tbl_invoice_payments)
+        { 
+            <tr>
+                <td>@item.Payment_Id</td>
+                <td>@item.Payment_Date</td>
+                <td>@item.Payment_Mode</td>
+                <td>@item.Payment_Amount</td>
+            </tr>
+        }
+    </table>
+</div>
+

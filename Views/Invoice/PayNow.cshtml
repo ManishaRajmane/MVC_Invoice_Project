@@ -1,0 +1,47 @@
+﻿@model MVC_Invoice_Project.Models.tbl_invoice_payments
+@{
+    ViewBag.Title = "PayNow";
+    Layout = "~/Views/Shared/Invoice/_MyLayout.cshtml";
+}
+
+<h2>PayNow</h2>
+
+<hr />
+
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td>Invoice Id</td>
+            <td>@Html.TextBoxFor(e => e.Invoice_Id)</td>
+        </tr>
+
+        <tr>
+            <td>Payment Date</td>
+            <td>@Html.TextBoxFor(e => e.Payment_Date, new { @type = "date" })</td>
+        </tr>
+
+        <tr>
+            <td>Payment Mode</td>
+            <td>@Html.TextBoxFor(e => e.Payment_Mode)</td>
+        </tr>
+
+        <tr>
+            <td>Paid Amount</td>
+            <td>@Html.TextBoxFor(e => e.Payment_Amount)</td>
+        </tr>
+
+        <tr>
+            <td>Payment Description</td>
+            <td>@Html.TextBoxFor(e => e.Payment_Description)</td>
+        </tr>
+
+        <tr>
+            <td><input type="submit" value="Payment" /></td>
+        </tr>
+
+    </table>
+}
+<hr />
+@ViewBag.msg
+

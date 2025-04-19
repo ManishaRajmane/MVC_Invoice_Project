@@ -1,0 +1,61 @@
+﻿@model MVC_Invoice_Project.Models.tbl_Products
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Invoice/_MyLayout.cshtml";
+}
+
+<h2>Products</h2>
+
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td>Product Name</td>
+            <td>@Html.TextBoxFor(e => e.Product_Name)</td>
+        </tr>
+
+        <tr>
+            <td>Product Rate</td>
+            <td>@Html.TextBoxFor(e => e.Rate)</td>
+        </tr>
+
+        <tr>
+            <td>Product GST</td>
+            <td>@Html.TextBoxFor(e => e.GST)</td>
+        </tr>
+
+        <tr>
+            <td>Stock Quantity</td>
+            <td>@Html.TextBoxFor(e => e.Stock_Quantity)</td>
+        </tr>
+
+        <tr>
+            <td><input type="submit" value="SUBMIT" /></td>
+        </tr>
+    </table>
+    @ViewBag.msg
+    <hr />
+    <table class="table-bordered">
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Product Rate</th>
+                <th>Product GST</th>
+                <th>Stock Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in ViewBag.Product)
+            {
+                <tr>
+                    <td>@row.Product_Id</td>
+                    <td>@row.Product_Name</td>
+                    <td>@row.Rate</td>
+                    <td>@row.GST</td>
+                    <td>@row.Stock_Quantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
